@@ -1,0 +1,35 @@
+# generic
+.DS_Store
+.fleet
+.idea
+.vscode
+.zed
+
+# node
+/node_modules
+/package-lock.json
+
+# composer
+/composer.lock
+/vendor
+
+# phpunit
+/.phpunit.cache
+/.phpunit.coverage
+/.phpunit.result.cache
+
+# php-cs-fixer
+/.php-cs-fixer.cache
+
+# svg
+*.svg
+
+# eslint
+*.tsx
+*.mts
+*.ts
+*.cts
+*.jsx
+*.mjs
+*.js
+*.cjs
