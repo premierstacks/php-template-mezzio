@@ -19,10 +19,10 @@ use Tests\TestCase;
 class PingHandlerTest extends TestCase
 {
     #[Test]
-    public function testHandle(): void
+    public function test(): void
     {
-        $response = $this->handle($this->request('GET', '/api/v1/ping'));
+        $response = $this->handle($this->createServerRequest(PingHandler::METHOD, PingHandler::PATH));
 
-        static::assertSame($response->getStatusCode(), StatusCodeInterface::STATUS_OK);
+        static::assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
     }
 }

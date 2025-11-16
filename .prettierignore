@@ -21,6 +21,9 @@
 # php-cs-fixer
 /.php-cs-fixer.cache
 
+# .env
+.env*
+
 # svg
 *.svg
 

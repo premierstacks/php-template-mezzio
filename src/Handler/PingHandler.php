@@ -4,13 +4,21 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-final class PingHandler implements RequestHandlerInterface
+final readonly class PingHandler implements RequestHandlerInterface
 {
+    public const string METHOD = RequestMethodInterface::METHOD_GET;
+
+    public const string PATH = '/api/ping';
+
+    public function __construct() {}
+
     #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -19,5 +27,10 @@ final class PingHandler implements RequestHandlerInterface
                 'timestamp' => \time(),
             ],
         ]);
+    }
+
+    public static function factory(ContainerInterface $container): self
+    {
+        return new self();
     }
 }

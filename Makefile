@@ -5,13 +5,13 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
 # Variables
-MAKE_PHP_8_4_EXE ?= php8.4
-MAKE_COMPOSER_2_EXE ?= /usr/local/bin/composer
+MAKE_PHP_8_3_EXE ?= php8.3
+MAKE_COMPOSER_EXE ?= /usr/local/bin/composer
 MAKE_NPM_EXE ?= npm
 MAKE_NODE_EXE ?= node
 
-MAKE_PHP ?= ${MAKE_PHP_8_4_EXE}
-MAKE_COMPOSER ?= ${MAKE_PHP} ${MAKE_COMPOSER_2_EXE}
+MAKE_PHP ?= ${MAKE_PHP_8_3_EXE}
+MAKE_COMPOSER ?= ${MAKE_PHP} ${MAKE_COMPOSER_EXE}
 MAKE_NPM ?= ${MAKE_NPM_EXE}
 MAKE_NODE ?= ${MAKE_NODE_EXE}
 
@@ -99,11 +99,9 @@ help:
 local: ./vendor
 	${MAKE_COMPOSER} run dump:development
 	${MAKE_COMPOSER} run config:clear
-	${MAKE_COMPOSER} run development:enable
 
 .PHONY: development
 development: local
-	${MAKE_COMPOSER} run development:disable
 
 .PHONY: testing
 testing: development
@@ -222,8 +220,7 @@ update_composer: ./composer.json
 	${MAKE_COMPOSER} run composer:update
 
 # Dependencies
-./.phpunit.coverage/html:
-	${MAKE} test_phpunit
+./.phpunit.coverage/html: test_phpunit
 
 ./package-lock.json ./node_modules ./node_modules/.bin/eslint ./node_modules/.bin/prettier:
 	${MAKE} install

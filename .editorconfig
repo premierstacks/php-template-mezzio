@@ -20,3 +20,6 @@ indent_size = 4
 
 [*.php.dist]
 indent_size = 4
+
+[*.php.stub]
+indent_size = 4

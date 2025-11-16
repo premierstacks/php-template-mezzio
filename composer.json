@@ -34,34 +34,29 @@
     }
   ],
   "require": {
-    "php": "~8.4.13",
-    "composer/package-versions-deprecated": "^1.11.99.5",
-    "laminas/laminas-component-installer": "^3.7.0",
+    "php": "~8.3.26",
     "laminas/laminas-config-aggregator": "^1.19.0",
+    "laminas/laminas-db": "^2.20.0",
     "laminas/laminas-diactoros": "^3.8.0",
-    "laminas/laminas-stdlib": "^3.21.0",
-    "mezzio/mezzio": "^3.23.2",
-    "mezzio/mezzio-helpers": "^5.20.0",
-    "laminas/laminas-servicemanager": "^3.24.0",
-    "mezzio/mezzio-laminasrouter": "^3.12.0",
-    "premierstacks/php-stack": "@dev"
+    "laminas/laminas-servicemanager": "4.5.0",
+    "mezzio/mezzio": "^3.25.0",
+    "mezzio/mezzio-fastroute": "^3.14",
+    "ext-apcu": "*"
   },
   "require-dev": {
-    "laminas/laminas-development-mode": "^3.15.0",
-    "mezzio/mezzio-tooling": "^2.12.0",
-    "phpunit/phpunit": "^12.4.2",
+    "phpunit/phpunit": "^12.4.3",
     "roave/security-advisories": "@dev",
     "premierstacks/php-cs-fixer-stack": "@dev",
     "premierstacks/phpstan-stack": "@dev"
   },
   "autoload": {
     "psr-4": {
-      "App\\": "./src/"
+      "App\\": "./src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": "./tests/"
+      "Tests\\": "./tests"
     }
   },
   "minimum-stability": "dev",
@@ -76,67 +71,44 @@
       "type": "vcs",
       "url": "https://github.com/premierstacks/phpstan-stack.git",
       "no-api": true
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/premierstacks/php-stack.git",
-      "no-api": true
     }
   ],
   "config": {
     "sort-packages": true,
     "allow-plugins": {
-      "phpstan/extension-installer": true,
-      "composer/package-versions-deprecated": true,
-      "laminas/laminas-component-installer": true
+      "phpstan/extension-installer": true
     },
     "audit": {
-      "abandoned": "report"
+      "abandoned": "fail"
     },
     "platform": {
-      "php": "8.4.13"
+      "php": "8.3.26"
     },
-    "platform-check": true
+    "platform-check": true,
+    "process-timeout": 0
   },
   "scripts": {
     "composer:audit": "@composer audit",
     "composer:install": "@composer install",
     "composer:platform": "@composer check-platform-reqs",
-    "composer:update": "@composer update",
+    "composer:update": "@composer update --with-all-dependencies",
     "composer:validate": "@composer validate --strict --no-check-all",
     "dump:development": "@composer dump-autoload -o --dev --strict-psr",
     "dump:production": "@composer dump-autoload -a --no-dev --strict-psr",
-    "fix:php-cs-fixer": "php-cs-fixer fix",
-    "lint:php-cs-fixer": "php-cs-fixer fix --dry-run --diff",
-    "stan:phpstan": "phpstan analyse",
+    "fix:php-cs-fixer": "@php php-cs-fixer fix",
+    "lint:php-cs-fixer": "@php php-cs-fixer check",
+    "stan:phpstan": "@php phpstan analyse",
     "start:development": [
-      "Composer\\Config::disableProcessTimeout",
       "@putenv APP_ENV=local",
-      "php -S 0.0.0.0:8080 -t ./public/"
+      "@php -S 0.0.0.0:8080 -t ./public"
     ],
     "start:coverage": [
-      "Composer\\Config::disableProcessTimeout",
       "@putenv APP_ENV=local",
-      "php -S 0.0.0.0:8080 -t ./.phpunit.coverage/html/"
+      "@php -S 0.0.0.0:8080 -t ./.phpunit.coverage/html"
     ],
-    "test:phpunit": "phpunit",
+    "test:phpunit": "@php phpunit",
     "post-install-cmd": "@config:clear",
     "post-update-cmd": "@config:clear",
-    "development:disable": "laminas-development-mode disable",
-    "development:enable": "laminas-development-mode enable",
-    "development:status": "laminas-development-mode status",
-    "mezzio": "laminas --ansi",
-    "config:clear": "@php ./bin/config_clear.php"
-  },
-  "extra": {
-    "laminas": {
-      "component-whitelist": [
-        "mezzio/mezzio",
-        "mezzio/mezzio-helpers",
-        "mezzio/mezzio-router",
-        "laminas/laminas-httphandlerrunner",
-        "mezzio/mezzio-laminasrouter"
-      ]
-    }
+    "config:clear": "@php -r 'apcu_clear_cache();'"
   }
 }

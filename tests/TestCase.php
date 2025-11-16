@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Bootstrap\Bootstrap;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase as VendorTestCase;
@@ -18,15 +19,41 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class TestCase extends VendorTestCase
 {
-    public Application $app;
+    public Application|null $app = null;
 
-    public ContainerInterface $container;
+    public ContainerInterface|null $container = null;
 
-    public MiddlewareFactory $middleware;
+    public MiddlewareFactory|null $middleware = null;
+
+    protected function app(): Application
+    {
+        if ($this->app === null) {
+            [$this->app, $this->middleware, $this->container] = Bootstrap::bootstrap();
+        }
+
+        return $this->app;
+    }
+
+    protected function container(): ContainerInterface
+    {
+        if ($this->container === null) {
+            [$this->app, $this->middleware, $this->container] = Bootstrap::bootstrap();
+        }
+
+        return $this->container;
+    }
+
+    /**
+     * @param array<array-key, mixed> $params
+     */
+    protected function createServerRequest(string $method, UriInterface|string $uri, array $params = []): ServerRequestInterface
+    {
+        return $this->resolve(ServerRequestFactoryInterface::class)->createServerRequest($method, $uri, $params);
+    }
 
     protected function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->app->handle($request);
+        return $this->app()->handle($request);
     }
 
     /**
@@ -36,40 +63,12 @@ abstract class TestCase extends VendorTestCase
      *
      * @return T
      */
-    protected function inject(string $class): object
+    protected function resolve(string $class): object
     {
-        $resolved = $this->resolve($class);
+        $resolved = $this->container()->get($class);
 
         \assert($resolved instanceof $class);
 
         return $resolved;
-    }
-
-    /**
-     * @param array<array-key, mixed> $params
-     */
-    protected function request(string $method, UriInterface|string $uri, array $params = []): ServerRequestInterface
-    {
-        return $this->inject(ServerRequestFactoryInterface::class)->createServerRequest($method, $uri, $params);
-    }
-
-    protected function resolve(string $id): mixed
-    {
-        return $this->container->get($id);
-    }
-
-    #[\Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $bootstrap = require __DIR__ . '/../config/bootstrap.php';
-
-        \assert(\is_array($bootstrap));
-        \assert(isset($bootstrap[0]) && $bootstrap[0] instanceof Application);
-        \assert(isset($bootstrap[1]) && $bootstrap[1] instanceof MiddlewareFactory);
-        \assert(isset($bootstrap[2]) && $bootstrap[2] instanceof ContainerInterface);
-
-        [$this->app, $this->middleware, $this->container] = $bootstrap;
     }
 }
