@@ -102,13 +102,10 @@
       "@putenv APP_ENV=local",
       "@php -S 0.0.0.0:8080 -t ./public"
     ],
-    "start:coverage": [
-      "@putenv APP_ENV=local",
-      "@php -S 0.0.0.0:8080 -t ./.phpunit.coverage/html"
-    ],
+    "start:coverage": "@php -S 0.0.0.0:8080 -t ./.phpunit.coverage/html",
     "test:phpunit": "@php phpunit",
-    "post-install-cmd": "@config:clear",
-    "post-update-cmd": "@config:clear",
-    "config:clear": "@php -r 'apcu_clear_cache();'"
+    "post-install-cmd": "@cache:clear",
+    "post-update-cmd": "@cache:clear",
+    "cache:clear": "@php -r 'apcu_clear_cache();'"
   }
 }

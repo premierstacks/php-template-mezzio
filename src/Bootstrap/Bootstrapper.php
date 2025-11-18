@@ -11,6 +11,7 @@ use Laminas\ConfigAggregator\PhpFileProvider;
 use Laminas\Diactoros\ConfigProvider as LaminasDiactorosConfigProvider;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
+use LogicException;
 use Mezzio\Application;
 use Mezzio\ConfigProvider as MezioConfigProvider;
 use Mezzio\Handler\NotFoundHandler;
@@ -22,7 +23,13 @@ use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Psr\Container\ContainerInterface;
 
-final readonly class Bootstrap
+use function assert;
+use function getenv;
+use function is_array;
+use function is_string;
+use function realpath;
+
+final readonly class Bootstrapper
 {
     /**
      * @return array{0: Application, 1: MiddlewareFactory, 2: ContainerInterface}
@@ -36,11 +43,11 @@ final readonly class Bootstrap
 
         $app = $container->get(Application::class);
 
-        \assert($app instanceof Application);
+        assert($app instanceof Application);
 
         $factory = $container->get(MiddlewareFactory::class);
 
-        \assert($factory instanceof MiddlewareFactory);
+        assert($factory instanceof MiddlewareFactory);
 
         self::pipeline($app, $factory, $container);
         self::routes($app, $factory, $container);
@@ -81,10 +88,10 @@ final readonly class Bootstrap
             MezzioRouterConfigProvider::class,
             LaminasDiactorosConfigProvider::class,
             ConfigProvider::class,
-            new PhpFileProvider(\realpath(__DIR__ . '/../../config/') . '/global.php'),
-            new PhpFileProvider(\realpath(__DIR__ . '/../../') . '/.env.php'),
-            new PhpFileProvider(\realpath(__DIR__ . '/../../config/') . "/{$env}.php"),
-            new PhpFileProvider(\realpath(__DIR__ . '/../../') . "/.env.{$env}.php"),
+            new PhpFileProvider(realpath(__DIR__ . '/../../config/') . '/global.php'),
+            new PhpFileProvider(realpath(__DIR__ . '/../../') . '/.env.php'),
+            new PhpFileProvider(realpath(__DIR__ . '/../../config/') . "/{$env}.php"),
+            new PhpFileProvider(realpath(__DIR__ . '/../../') . "/.env.{$env}.php"),
         ]))->getMergedConfig();
 
         $dependencies = (new ConfigAggregator([
@@ -98,17 +105,17 @@ final readonly class Bootstrap
             ]),
         ]))->getMergedConfig()['dependencies'] ?? [];
 
-        \assert(\is_array($dependencies));
+        assert(is_array($dependencies));
 
         return $dependencies;
     }
 
     private static function env(): string
     {
-        $env = \getenv('APP_ENV');
+        $env = getenv('APP_ENV');
 
-        if (!\is_string($env)) {
-            throw new \LogicException('APP_ENV');
+        if (!is_string($env)) {
+            throw new LogicException('APP_ENV');
         }
 
         return $env;

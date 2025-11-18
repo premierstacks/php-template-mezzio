@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use App\Bootstrap\Bootstrap;
+use App\Bootstrap\Bootstrapper;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase as VendorTestCase;
@@ -14,21 +14,23 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
+use function assert;
+
 /**
  * @internal
  */
 abstract class TestCase extends VendorTestCase
 {
-    public Application|null $app = null;
+    private Application|null $app = null;
 
-    public ContainerInterface|null $container = null;
+    private ContainerInterface|null $container = null;
 
-    public MiddlewareFactory|null $middleware = null;
+    private MiddlewareFactory|null $middleware = null;
 
     protected function app(): Application
     {
         if ($this->app === null) {
-            [$this->app, $this->middleware, $this->container] = Bootstrap::bootstrap();
+            [$this->app, $this->middleware, $this->container] = Bootstrapper::bootstrap();
         }
 
         return $this->app;
@@ -37,7 +39,7 @@ abstract class TestCase extends VendorTestCase
     protected function container(): ContainerInterface
     {
         if ($this->container === null) {
-            [$this->app, $this->middleware, $this->container] = Bootstrap::bootstrap();
+            [$this->app, $this->middleware, $this->container] = Bootstrapper::bootstrap();
         }
 
         return $this->container;
@@ -56,6 +58,15 @@ abstract class TestCase extends VendorTestCase
         return $this->app()->handle($request);
     }
 
+    protected function middleware(): MiddlewareFactory
+    {
+        if ($this->middleware === null) {
+            [$this->app, $this->middleware, $this->container] = Bootstrapper::bootstrap();
+        }
+
+        return $this->middleware;
+    }
+
     /**
      * @template T of object
      *
@@ -67,7 +78,7 @@ abstract class TestCase extends VendorTestCase
     {
         $resolved = $this->container()->get($class);
 
-        \assert($resolved instanceof $class);
+        assert($resolved instanceof $class);
 
         return $resolved;
     }

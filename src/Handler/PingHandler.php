@@ -6,10 +6,13 @@ namespace App\Handler;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+
+use function time;
 
 final readonly class PingHandler implements RequestHandlerInterface
 {
@@ -19,18 +22,18 @@ final readonly class PingHandler implements RequestHandlerInterface
 
     public function __construct() {}
 
-    #[\Override]
+    public static function factory(ContainerInterface $container): self
+    {
+        return new self();
+    }
+
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
             'meta' => [
-                'timestamp' => \time(),
+                'timestamp' => time(),
             ],
         ]);
-    }
-
-    public static function factory(ContainerInterface $container): self
-    {
-        return new self();
     }
 }

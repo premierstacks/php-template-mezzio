@@ -8,17 +8,20 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\AdapterInterface;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+use function is_array;
+
 final readonly class AdapterInterfaceFactory
 {
     public static function factory(ContainerInterface $container): AdapterInterface
     {
         $config = $container->get('config');
 
-        \assert(\is_array($config));
+        assert(is_array($config));
 
         $db = $config['db'] ?? null;
 
-        \assert(\is_array($db));
+        assert(is_array($db));
 
         return new Adapter($db);
     }

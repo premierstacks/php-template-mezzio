@@ -98,7 +98,7 @@ help:
 .PHONY: local
 local: ./vendor
 	${MAKE_COMPOSER} run dump:development
-	${MAKE_COMPOSER} run config:clear
+	${MAKE_COMPOSER} run cache:clear
 
 .PHONY: development
 development: local

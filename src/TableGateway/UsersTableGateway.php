@@ -10,17 +10,19 @@ use Laminas\Db\TableGateway\Feature\RowGatewayFeature;
 use Laminas\Db\TableGateway\TableGateway;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+
 final class UsersTableGateway extends TableGateway
 {
     public static function factory(ContainerInterface $container): self
     {
         $adapter = $container->get(AdapterInterface::class);
 
-        \assert($adapter instanceof AdapterInterface);
+        assert($adapter instanceof AdapterInterface);
 
         $row = $container->get(UsersRowGateway::class);
 
-        \assert($row instanceof UsersRowGateway);
+        assert($row instanceof UsersRowGateway);
 
         return new self('users', $adapter, new RowGatewayFeature($row));
     }

@@ -8,6 +8,8 @@ use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\RowGateway\RowGateway;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+
 /**
  * @property int $id
  */
@@ -17,7 +19,7 @@ final class UsersRowGateway extends RowGateway
     {
         $adapter = $container->get(AdapterInterface::class);
 
-        \assert($adapter instanceof AdapterInterface);
+        assert($adapter instanceof AdapterInterface);
 
         return new self('id', 'users', $adapter);
     }
