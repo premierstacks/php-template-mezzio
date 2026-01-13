@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bootstrap;
+namespace Src\Bootstrap;
 
 use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;

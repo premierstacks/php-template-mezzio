@@ -2,15 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace Src\Database;
 
 interface MigrationInterface
 {
-    /**
-     * @return iterable<int|string, string>
-     */
-    public function down(): iterable;
-
     public function selector(): string;
 
     /**

@@ -3,8 +3,9 @@ includes:
 
 parameters:
   paths:
+    - ./.php-cs-fixer.php
     - ./bin
     - ./config
-    - ./public
+    - ./index.php
     - ./src
     - ./tests

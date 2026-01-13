@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Migration;
+namespace Src\Migration;
 
-use App\Database\MigrationInterface;
 use Override;
 use Psr\Container\ContainerInterface;
+use Src\Database\MigrationInterface;
 
 final readonly class CreateUsersTableMigration implements MigrationInterface
 {
@@ -15,12 +15,6 @@ final readonly class CreateUsersTableMigration implements MigrationInterface
     public static function provide(ContainerInterface $container): self
     {
         return new self();
-    }
-
-    #[Override]
-    public function down(): iterable
-    {
-        yield from [];
     }
 
     #[Override]

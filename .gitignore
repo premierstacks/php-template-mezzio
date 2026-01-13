@@ -7,11 +7,13 @@
 
 # node
 /node_modules
-/package-lock.json
 
 # composer
-/composer.lock
 /vendor
+
+# environment files and secrets
+/.env
+/.secrets
 
 # phpunit
 /.phpunit.cache
@@ -21,5 +23,6 @@
 # php-cs-fixer
 /.php-cs-fixer.cache
 
-# .env
-/.env*
+# temporary
+/composer.lock
+/package-lock.json

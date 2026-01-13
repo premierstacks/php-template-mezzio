@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace Src\Database;
 
 use Override;
 use PDO;
@@ -71,7 +71,15 @@ final readonly class PdoConfig implements PdoConfigInterface
         assert(is_string($pdo['password']));
         assert(is_array($pdo['options']));
 
-        return new self($pdo['host'], $pdo['port'], $pdo['dbname'], $pdo['socket'], $pdo['username'], $pdo['password'], $pdo['options']);
+        $password = file_get_contents($pdo['password']);
+
+        if (!is_string($password)) {
+            $password = $pdo['password'];
+        }
+
+        $password = trim($password);
+
+        return new self($pdo['host'], $pdo['port'], $pdo['dbname'], $pdo['socket'], $pdo['username'], $password, $pdo['options']);
     }
 
     #[Override]

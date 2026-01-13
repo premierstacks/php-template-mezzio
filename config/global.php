@@ -2,25 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Config;
-
 use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
-use PDO;
-
-use function getenv;
 
 return (new ConfigAggregator([
     new ArrayProvider([
-        'APP_ENV' => getenv('APP_ENV'),
+        'APP_ENV' => \getenv('APP_ENV'),
         PDO::class => [
-            'dbname' => getenv('DB_DATABASE'),
-            'password' => getenv('DB_PASSWORD'),
-            'username' => getenv('DB_USER'),
+            'dbname' => \getenv('MYSQL_DATABASE'),
+            'host' => \getenv('MYSQL_HOST'),
             'options' => [],
-            'host' => '',
+            'password' => \getenv('MYSQL_PASSWORD_FILE'),
             'port' => '',
             'socket' => '',
+            'username' => \getenv('MYSQL_USER'),
         ],
         'debug' => false,
     ]),

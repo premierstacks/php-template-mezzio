@@ -13,6 +13,10 @@
 /composer.lock
 /vendor
 
+# environment files and secrets
+/.env
+/.secrets
+
 # phpunit
 /.phpunit.cache
 /.phpunit.coverage
@@ -21,18 +25,15 @@
 # php-cs-fixer
 /.php-cs-fixer.cache
 
-# .env
-/.env*
-
 # svg
 *.svg
 
 # eslint
-*.tsx
-*.mts
-*.ts
+*.cjs
 *.cts
+*.js
 *.jsx
 *.mjs
-*.js
-*.cjs
+*.mts
+*.ts
+*.tsx

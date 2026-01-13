@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Bootstrap;
+namespace Src\Bootstrap;
 
-use App\Handler\PingHandler;
 use GlobIterator;
 use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
@@ -23,6 +22,7 @@ use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Psr\Container\ContainerInterface;
+use Src\Handler\PingHandler;
 
 use function assert;
 use function getenv;
@@ -75,8 +75,6 @@ final readonly class Bootstrapper
      */
     private static function config(): array
     {
-        (new IniPutEnv(new GlobIterator(__DIR__ . '/../../.env.ini')))();
-
         $env = getenv('APP_ENV');
 
         if (!is_string($env)) {

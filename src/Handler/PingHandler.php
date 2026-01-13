@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace Src\Handler;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\JsonResponse;

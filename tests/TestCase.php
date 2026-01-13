@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use App\Bootstrap\Bootstrapper;
-use App\Bootstrap\Kernel;
-use App\Database\Migrations;
-use App\Database\Migrator;
-use App\Database\PdoConfigInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;
 use Override;
 use PDO;
-use PHPUnit\Framework\TestCase as VendorTestCase;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Random\Randomizer;
+use Src\Bootstrap\Bootstrapper;
+use Src\Bootstrap\Kernel;
+use Src\Database\Migrations;
+use Src\Database\Migrator;
+use Src\Database\PdoConfigInterface;
 
 use function assert;
 use function implode;
@@ -27,7 +27,7 @@ use function range;
 /**
  * @internal
  */
-abstract class TestCase extends VendorTestCase
+abstract class TestCase extends PHPUnitTestCase
 {
     private string $id = '';
 

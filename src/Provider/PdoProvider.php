@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Provider;
+namespace Src\Provider;
 
-use App\Database\PdoConfigInterface;
 use PDO;
 use Pdo\Mysql;
 use Psr\Container\ContainerInterface;
+use Src\Database\PdoConfigInterface;
 
 use function array_filter;
 use function array_replace;

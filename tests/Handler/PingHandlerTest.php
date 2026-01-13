@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Handler;
+namespace Tests\Handler;
 
-use App\Handler\PingHandler;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
+use Src\Handler\PingHandler;
 use Tests\TestCase;
 
 /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace Src\Database;
 
 use PDO;
 use PDOStatement;
@@ -40,7 +40,7 @@ final readonly class Migrator
             $this->init();
 
             foreach ($migrations as $migration) {
-                if ($this->isUp($migration)) {
+                if ($this->marked($migration)) {
                     continue;
                 }
 
@@ -48,14 +48,14 @@ final readonly class Migrator
                     $this->execute($ddl);
                 }
 
-                $this->markUp($migration);
+                $this->mark($migration);
             }
         } finally {
             $this->unlock();
         }
     }
 
-    public function isUp(MigrationInterface $migration): bool
+    public function marked(MigrationInterface $migration): bool
     {
         $stm = $this->pdo->prepare('select distinct 1 from migrations where selector = ? limit ?');
 
@@ -66,7 +66,7 @@ final readonly class Migrator
         return $stm->fetchColumn() !== false;
     }
 
-    public function markUp(MigrationInterface $migration): void
+    public function mark(MigrationInterface $migration): void
     {
         $stm = $this->pdo->prepare('insert into migrations (selector) values (?)');
 

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Bootstrap;
+namespace Src\Bootstrap;
 
-use App\Database\Migrations;
-use App\Database\Migrator;
-use App\Database\PdoConfig;
-use App\Database\PdoConfigInterface;
-use App\Handler\PingHandler;
-use App\Migration\CreateUsersTableMigration;
-use App\Provider\PdoProvider;
 use PDO;
+use Src\Database\Migrations;
+use Src\Database\Migrator;
+use Src\Database\PdoConfig;
+use Src\Database\PdoConfigInterface;
+use Src\Handler\PingHandler;
+use Src\Migration\CreateUsersTableMigration;
+use Src\Provider\PdoProvider;
 
 final readonly class ConfigProvider
 {

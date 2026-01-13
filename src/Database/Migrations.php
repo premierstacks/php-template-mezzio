@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace Src\Database;
 
-use App\Migration\CreateUsersTableMigration;
 use IteratorAggregate;
 use Override;
 use Psr\Container\ContainerInterface;
+use Src\Migration\CreateUsersTableMigration;
 use Traversable;
 
 use function assert;
