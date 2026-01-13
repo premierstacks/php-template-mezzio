@@ -9,8 +9,10 @@ use PDO;
 use Psr\Container\ContainerInterface;
 
 use function assert;
+use function file_get_contents;
 use function is_array;
 use function is_string;
+use function mb_trim;
 
 final readonly class PdoConfig implements PdoConfigInterface
 {
@@ -77,7 +79,7 @@ final readonly class PdoConfig implements PdoConfigInterface
             $password = $pdo['password'];
         }
 
-        $password = trim($password);
+        $password = mb_trim($password);
 
         return new self($pdo['host'], $pdo['port'], $pdo['dbname'], $pdo['socket'], $pdo['username'], $password, $pdo['options']);
     }

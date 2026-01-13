@@ -1,12 +1,7 @@
 {
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-containers",
-        "docker.docker",
-        "EditorConfig.EditorConfig",
-        "Tyriar.sort-lines"
-      ],
+      "extensions": ["ms-azuretools.vscode-containers", "docker.docker", "EditorConfig.EditorConfig", "Tyriar.sort-lines"],
       "settings": {
         "editor.codeActionsOnSave": {
           "source.addMissingImports.ts": "explicit",
@@ -21,10 +16,7 @@
       }
     }
   },
-  "dockerComposeFile": [
-    "../docker-compose.yml",
-    "./docker-compose.yml"
-  ],
+  "dockerComposeFile": ["../docker-compose.yml", "./docker-compose.yml"],
   "postCreateCommand": "make postcreate",
   "remoteUser": "devcontainer",
   "service": "devcontainer",

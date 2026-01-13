@@ -55,6 +55,15 @@ final readonly class Migrator
         }
     }
 
+    public function mark(MigrationInterface $migration): void
+    {
+        $stm = $this->pdo->prepare('insert into migrations (selector) values (?)');
+
+        assert($stm instanceof PDOStatement);
+
+        $stm->execute([$migration->selector()]);
+    }
+
     public function marked(MigrationInterface $migration): bool
     {
         $stm = $this->pdo->prepare('select distinct 1 from migrations where selector = ? limit ?');
@@ -64,15 +73,6 @@ final readonly class Migrator
         $stm->execute([$migration->selector(), 1]);
 
         return $stm->fetchColumn() !== false;
-    }
-
-    public function mark(MigrationInterface $migration): void
-    {
-        $stm = $this->pdo->prepare('insert into migrations (selector) values (?)');
-
-        assert($stm instanceof PDOStatement);
-
-        $stm->execute([$migration->selector()]);
     }
 
     private function execute(string $ddl): void

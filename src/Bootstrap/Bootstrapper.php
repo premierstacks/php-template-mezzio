@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Src\Bootstrap;
 
-use GlobIterator;
 use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
