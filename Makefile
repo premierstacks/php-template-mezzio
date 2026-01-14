@@ -9,7 +9,7 @@ SHELL := /bin/bash
 commit: distclean update fix check
 
 .PHONY: fix
-fix: fix_eslint fix_prettier fix_php_cs_fixer
+fix: fix_eslint fix_prettier fix_php_cs_fixer fix_yaml
 
 .PHONY: check
 check: lint stan test audit
@@ -60,6 +60,10 @@ fix_prettier: ./node_modules ./prettier.config.js
 .PHONY: fix_php_cs_fixer
 fix_php_cs_fixer: ./vendor ./.php-cs-fixer.php
 	composer exec -- php-cs-fixer fix
+
+.PHONY: fix_yaml
+fix_yaml:
+	find . -type f -name "*.yml" -exec yq -i 'sort_keys(..)' {} \;
 
 .PHONY: lint_eslint
 lint_eslint: ./node_modules ./eslint.config.js

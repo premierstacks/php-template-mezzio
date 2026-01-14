@@ -29,7 +29,6 @@ RUN <<EOF
 EOF
 COPY ./ops/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --from=versionedcomposer /usr/bin/composer /usr/bin/composer
-COPY ./ops/php/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 FROM base AS devcontainer
 ENV APP_ENV=local
@@ -45,6 +44,8 @@ RUN <<EOF
   wget https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-x64.tar.xz -O node.tar.xz
   tar -xf node.tar.xz -C /usr/local --strip-components=1
   rm node.tar.xz
+  wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+  chmod +x /usr/local/bin/yq
 EOF
 COPY ./ops/php/z.ini /usr/local/etc/php/conf.d/z.ini
 COPY ./ops/php/zz.ini /usr/local/etc/php/conf.d/zz.ini
@@ -68,6 +69,7 @@ RUN <<EOF
 EOF
 COPY ./ops/php/z.ini /usr/local/etc/php/conf.d/z.ini
 COPY ./ops/php/zz.ini /usr/local/etc/php/conf.d/zz.ini
+COPY ./ops/php/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 FROM versionednginx AS nginx
 WORKDIR /var/www/html

@@ -1,9 +1,5 @@
 services:
   devcontainer:
-    networks:
-      - 'php'
-      - 'mysql'
-      - 'valkey'
     build:
       context: './'
       dockerfile: './Dockerfile'
@@ -17,6 +13,10 @@ services:
       MYSQL_ROOT_PASSWORD_FILE: '/run/secrets/db_root_password'
       MYSQL_USER: 'db'
       NODE_ENV: 'development'
+    networks:
+      - 'mysql'
+      - 'php'
+      - 'valkey'
     secrets:
       - 'db_password'
       - 'db_root_password'
