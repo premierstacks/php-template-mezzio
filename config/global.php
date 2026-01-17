@@ -8,6 +8,7 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 return (new ConfigAggregator([
     new ArrayProvider([
         'APP_ENV' => \getenv('APP_ENV'),
+        'debug' => false,
         PDO::class => [
             'dbname' => \getenv('MYSQL_DATABASE'),
             'host' => \getenv('MYSQL_HOST'),
@@ -17,6 +18,5 @@ return (new ConfigAggregator([
             'socket' => '',
             'username' => \getenv('MYSQL_USER'),
         ],
-        'debug' => false,
     ]),
 ]))->getMergedConfig();

@@ -10,6 +10,7 @@ use function apcu_enabled;
 use function apcu_fetch;
 use function apcu_store;
 use function is_array;
+use function opcache_is_script_cached;
 
 use const PHP_SAPI;
 
@@ -52,7 +53,7 @@ final readonly class ApcuConfigCache
 
     private static function enabled(): bool
     {
-        return apcu_enabled() && PHP_SAPI !== 'cli' && PHP_SAPI !== 'cli-server' && PHP_SAPI !== 'phpdbg';
+        return apcu_enabled() && opcache_is_script_cached(__FILE__) && PHP_SAPI !== 'cli' && PHP_SAPI !== 'cli-server' && PHP_SAPI !== 'phpdbg';
     }
 
     private static function key(): string

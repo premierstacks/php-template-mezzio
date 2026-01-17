@@ -14,7 +14,8 @@ services:
   mysql:
     cap_drop:
       - 'ALL'
-    command: '--log-error-suppression-list="MY-013360"'
+    command:
+      - '--log-error-suppression-list="MY-013360"'
     environment:
       MYSQL_DATABASE: 'db'
       MYSQL_PASSWORD_FILE: '/run/secrets/db_password'
@@ -24,7 +25,10 @@ services:
       interval: '10s'
       retries: 3
       start_period: '30s'
-      test: ['CMD', 'mysqladmin', 'ping']
+      test:
+        - 'CMD'
+        - 'mysqladmin'
+        - 'ping'
       timeout: '5s'
     image: 'mysql:8-oracle'
     logging:
@@ -44,16 +48,23 @@ services:
     stop_grace_period: '60s'
     sysctls:
       - 'net.core.somaxconn=65535'
-    tmpfs:
-      - '/tmp:rw,nosuid,nodev,noexec,mode=1777,size=64m,noatime,nodiratime'
-      - '/var/run:rw,nosuid,nodev,noexec,mode=1777,size=2m,noatime,nodiratime'
     ulimits:
       nofile:
         hard: 1048576
         soft: 1048576
     user: 'mysql:mysql'
     volumes:
-      - 'mysql_data:/var/lib/mysql'
+      - target: '/tmp'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
+      - target: '/run'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
+      - source: 'mysql_data'
+        target: '/var/lib/mysql'
+        type: 'volume'
   nginx:
     build:
       context: './'
@@ -68,7 +79,9 @@ services:
       interval: '10s'
       retries: 3
       start_period: '30s'
-      test: ['CMD-SHELL', 'curl -fsS http://localhost:8080/ping | grep -q pong || exit 1']
+      test:
+        - 'CMD-SHELL'
+        - 'curl -fsS http://localhost:8080/ping | grep -q pong || exit 1'
       timeout: '5s'
     logging:
       driver: 'json-file'
@@ -76,7 +89,7 @@ services:
         max-file: 3
         max-size: '10m'
     networks:
-      - php
+      - 'php'
     ports:
       - '8080:8080'
     read_only: true
@@ -89,14 +102,20 @@ services:
       - 'net.ipv4.ip_local_port_range=1024 65535'
       - 'net.ipv4.tcp_fin_timeout=15'
       - 'net.ipv4.tcp_tw_reuse=1'
-    tmpfs:
-      - '/tmp:rw,nosuid,nodev,noexec,mode=1777,size=64m,noatime,nodiratime'
-      - '/var/run:rw,nosuid,nodev,noexec,mode=1777,size=2m,noatime,nodiratime'
     ulimits:
       nofile:
         hard: 1048576
         soft: 1048576
     user: 'nginx:nginx'
+    volumes:
+      - target: '/tmp'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
+      - target: '/run'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
   php:
     build:
       context: './'
@@ -120,7 +139,9 @@ services:
       interval: '10s'
       retries: 3
       start_period: '30s'
-      test: ['CMD-SHELL', 'REQUEST_METHOD=GET SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping cgi-fcgi -bind -connect localhost:9000 | grep -q pong || exit 1']
+      test:
+        - 'CMD-SHELL'
+        - 'REQUEST_METHOD=GET SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping cgi-fcgi -bind -connect localhost:9000 | grep -q pong || exit 1'
       timeout: '5s'
     logging:
       driver: 'json-file'
@@ -128,9 +149,9 @@ services:
         max-file: 3
         max-size: '10m'
     networks:
-      - mysql
-      - php
-      - valkey
+      - 'mysql'
+      - 'php'
+      - 'valkey'
     read_only: true
     restart: 'unless-stopped'
     secrets:
@@ -140,14 +161,20 @@ services:
     stop_grace_period: '60s'
     sysctls:
       - 'net.core.somaxconn=65535'
-    tmpfs:
-      - '/tmp:rw,nosuid,nodev,noexec,mode=1777,size=64m,noatime,nodiratime'
-      - '/var/run:rw,nosuid,nodev,noexec,mode=1777,size=2m,noatime,nodiratime'
     ulimits:
       nofile:
         hard: 1048576
         soft: 1048576
     user: 'www-data:www-data'
+    volumes:
+      - target: '/tmp'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
+      - target: '/run'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
   valkey:
     cap_drop:
       - 'ALL'
@@ -155,7 +182,10 @@ services:
       interval: '10s'
       retries: 3
       start_period: '30s'
-      test: ['CMD', 'valkey-cli', 'ping']
+      test:
+        - 'CMD'
+        - 'valkey-cli'
+        - 'ping'
       timeout: '5s'
     image: 'valkey/valkey:9-trixie'
     logging:
@@ -164,7 +194,7 @@ services:
         max-file: 3
         max-size: '10m'
     networks:
-      - valkey
+      - 'valkey'
     read_only: true
     restart: 'unless-stopped'
     security_opt:
@@ -172,16 +202,23 @@ services:
     stop_grace_period: '60s'
     sysctls:
       - 'net.core.somaxconn=65535'
-    tmpfs:
-      - '/tmp:rw,nosuid,nodev,noexec,mode=1777,size=64m,noatime,nodiratime'
-      - '/var/run:rw,nosuid,nodev,noexec,mode=1777,size=2m,noatime,nodiratime'
     ulimits:
       nofile:
         hard: 1048576
         soft: 1048576
     user: 'valkey:valkey'
     volumes:
-      - 'valkey_data:/data'
+      - target: '/tmp'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
+      - target: '/run'
+        tmpfs:
+          mode: 01777
+        type: 'tmpfs'
+      - source: 'valkey_data'
+        target: '/data'
+        type: 'volume'
 volumes:
   mysql_data:
   valkey_data:

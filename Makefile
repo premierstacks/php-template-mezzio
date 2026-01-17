@@ -94,7 +94,7 @@ audit_composer: ./vendor ./composer.json ./composer.lock
 	composer audit
 	composer check-platform-reqs
 	composer validate --strict --with-dependencies --check-lock
-	composer dump-autoload -o --strict-psr --strict-ambiguous
+	composer dump-autoload --optimize --strict-psr --strict-ambiguous
 
 .PHONY: install_npm
 install_npm: ./package.json ./package-lock.json
@@ -103,7 +103,7 @@ install_npm: ./package.json ./package-lock.json
 .PHONY: install_composer
 install_composer: ./composer.json ./composer.lock
 	composer install --no-autoloader
-	composer dump-autoload -o --strict-psr --strict-ambiguous
+	composer dump-autoload --optimize --strict-psr --strict-ambiguous
 
 .PHONY: update_npm
 update_npm: ./package.json
@@ -116,30 +116,44 @@ update_composer: ./composer.json
 	rm -rf ./vendor
 	rm -rf ./composer.lock
 	composer update --no-autoloader --with-all-dependencies
-	composer dump-autoload -o --strict-psr --strict-ambiguous
+	composer dump-autoload --optimize --strict-psr --strict-ambiguous
 
 .PHONY: postcreate
-postcreate: install
+postcreate: install migrate
 
 .PHONY: start serve server dev
 start serve server dev: ./vendor ./index.php ./composer.json ./composer.lock
 	php -S 0.0.0.0:8000 ./index.php
 
+.PHONY: migrate
+migrate: ./vendor ./bin/migrate_up.php ./composer.json ./composer.lock
+	php ./bin/migrate_up.php
+
 .PHONY: prune
 prune:
-	docker system prune --all --volumes --force
+	docker container prune -f
+	docker image prune --all -f
+	docker network prune -f
+	docker volume prune --all -f
+	docker builder prune --all -f
+	docker buildx prune --all -f
+	docker system prune --all --volumes -f
 
 .PHONY: image
 image:
-	docker compose -f ./docker-compose.yml -f ./docker-swarm.yml build --pull --push
+	docker compose -f ./docker-compose.yml -f ./docker-compose-swarm.yml build --pull --push
 
 .PHONY: deploy
 deploy:
-	docker stack deploy -c ./docker-compose.yml -c ./docker-swarm.yml --with-registry-auth --prune --detach=false ${CI_PROJECT_PATH_SLUG}
+	docker stack deploy -c ./docker-compose.yml -c ./docker-compose-swarm.yml --with-registry-auth --prune --detach=false --resolve-image=always ${CI_PROJECT_PATH_SLUG:-php-template-mezzio}
 
-.PHONY: compose
-compose:
-	docker compose -f ./docker-compose.yml up --build --remove-orphans
+.PHONY: up
+up:
+	docker compose -f ./docker-compose.yml up --build --remove-orphans --always-recreate-deps --force-recreate --pull=always --renew-anon-volumes
+
+.PHONY: down
+down:
+	docker compose down -v --remove-orphans --rmi=local
 
 .PHONY: password
 password:

@@ -16,7 +16,7 @@ RUN <<EOF
   set -euo pipefail
   apt-get update -y
   apt-get upgrade -y --no-install-recommends
-  apt-get install -y --no-install-recommends ca-certificates curl wget build-essential git zip unzip apt-transport-https gnupg lsb-release libfcgi-bin
+  apt-get install -y --no-install-recommends libfcgi-bin
   docker-php-ext-install pdo pdo_mysql
   pecl install apcu redis
   docker-php-ext-enable apcu redis
@@ -35,6 +35,9 @@ ENV APP_ENV=local
 ENV NODE_ENV=development
 RUN <<EOF
   set -euo pipefail
+  apt-get update -y
+  apt-get upgrade -y --no-install-recommends
+  apt-get install -y --no-install-recommends ca-certificates curl wget build-essential git zip unzip apt-transport-https gnupg lsb-release
   docker-php-ext-install pcntl
   pecl install xdebug
   docker-php-ext-enable xdebug
@@ -46,25 +49,35 @@ RUN <<EOF
   rm node.tar.xz
   wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
   chmod +x /usr/local/bin/yq
+  apt-get autoremove -y
+  apt-get autoclean -y
+  apt-get clean -y
+  rm -rf /var/lib/apt/lists/*
 EOF
 COPY ./ops/php/z.ini /usr/local/etc/php/conf.d/z.ini
 COPY ./ops/php/zz.ini /usr/local/etc/php/conf.d/zz.ini
 COPY ./ops/php/zzz.ini /usr/local/etc/php/conf.d/zzz.ini
 
+FROM versionedcomposer AS vendor
+COPY ./composer* ./
+RUN <<EOF
+  set -euo pipefail
+  composer install --no-dev --no-autoloader --ignore-platform-reqs --no-ansi --no-interaction --no-scripts --no-plugins
+EOF
+
 FROM base AS php
+COPY --from=vendor /app/composer* ./
+COPY --from=vendor /app/vendor ./vendor
 COPY ./bin ./bin
-COPY ./composer.json ./composer.json
-COPY ./composer.lock ./composer.lock
 COPY ./config ./config
 COPY ./index.php ./index.php
 COPY ./src ./src
 RUN <<EOF
   set -euo pipefail
-  composer install --no-dev --no-autoloader
-  composer dump-autoload --no-dev -a --strict-psr --strict-ambiguous
-  composer audit --no-dev
-	composer check-platform-reqs --no-dev
-	composer validate --strict --with-dependencies --check-lock
+  composer dump-autoload --no-dev --classmap-authoritative --strict-psr --strict-ambiguous --no-ansi --no-interaction --no-scripts --no-plugins
+  composer audit --no-dev --no-ansi --no-interaction --no-scripts --no-plugins
+  composer check-platform-reqs --no-dev --no-ansi --no-interaction --no-scripts --no-plugins
+  composer validate --strict --with-dependencies --check-lock --no-ansi --no-interaction --no-scripts --no-plugins
   mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 EOF
 COPY ./ops/php/z.ini /usr/local/etc/php/conf.d/z.ini

@@ -35,9 +35,9 @@ final readonly class ConfigProvider
                 CreateUsersTableMigration::class => CreateUsersTableMigration::class . '::provide',
                 Migrations::class => Migrations::class . '::provide',
                 Migrator::class => Migrator::class . '::provide',
-                PingHandler::class => PingHandler::class . '::provide',
-                PdoConfigInterface::class => PdoConfig::class . '::provide',
                 PDO::class => PdoProvider::class . '::provide',
+                PdoConfigInterface::class => PdoConfig::class . '::provide',
+                PingHandler::class => PingHandler::class . '::provide',
             ],
         ];
     }

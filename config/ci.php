@@ -7,11 +7,11 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 
 return (new ConfigAggregator([
     new ArrayProvider([
+        'debug' => true,
         PDO::class => [
             'dbname' => '',
             'password' => \getenv('MYSQL_ROOT_PASSWORD_FILE'),
             'username' => 'root',
         ],
-        'debug' => true,
     ]),
 ]))->getMergedConfig();

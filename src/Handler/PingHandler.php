@@ -18,7 +18,7 @@ final readonly class PingHandler implements RequestHandlerInterface
 {
     public const string METHOD = RequestMethodInterface::METHOD_GET;
 
-    public const string PATH = '/api/ping';
+    public const string PATH = '/api/v1/ping';
 
     public function __construct() {}
 

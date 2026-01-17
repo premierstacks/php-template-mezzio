@@ -1,7 +1,7 @@
 {
   "customizations": {
     "vscode": {
-      "extensions": ["ms-azuretools.vscode-containers", "docker.docker", "EditorConfig.EditorConfig", "Tyriar.sort-lines"],
+      "extensions": ["docker.docker", "EditorConfig.EditorConfig", "Tyriar.sort-lines"],
       "settings": {
         "editor.codeActionsOnSave": {
           "source.addMissingImports.ts": "explicit",

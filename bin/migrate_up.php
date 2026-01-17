@@ -10,10 +10,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $kernel = Bootstrapper::bootstrap();
 
-$migrations = $kernel->container->get(Migrations::class);
 $migrator = $kernel->container->get(Migrator::class);
+$migrations = $kernel->container->get(Migrations::class);
 
-\assert($migrations instanceof Migrations);
 \assert($migrator instanceof Migrator);
+\assert($migrations instanceof Migrations);
 
 $migrator->forward($migrations);
