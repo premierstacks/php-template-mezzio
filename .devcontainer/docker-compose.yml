@@ -1,3 +1,6 @@
+networks:
+  devcontainer:
+    internal: false
 services:
   devcontainer:
     build:
@@ -14,7 +17,9 @@ services:
       MYSQL_USER: 'db'
       NODE_ENV: 'development'
     networks:
+      - 'devcontainer'
       - 'mysql'
+      - 'nginx'
       - 'php'
       - 'valkey'
     secrets:

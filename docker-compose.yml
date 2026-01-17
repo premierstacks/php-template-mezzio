@@ -1,8 +1,10 @@
 networks:
   mysql:
     internal: true
-  php:
+  nginx:
     internal: false
+  php:
+    internal: true
   valkey:
     internal: true
 secrets:
@@ -89,6 +91,7 @@ services:
         max-file: 3
         max-size: '10m'
     networks:
+      - 'nginx'
       - 'php'
     ports:
       - '8080:8080'

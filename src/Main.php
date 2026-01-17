@@ -13,12 +13,14 @@
 
 declare(strict_types=1);
 
-use TomasChochola\Tooling\PhpCsFixerConfig\ConfigFactory;
-use TomasChochola\Tooling\PhpCsFixerConfig\FinderFactory;
-use TomasChochola\Tooling\PhpCsFixerConfig\PHP85;
+namespace Src;
 
-return ConfigFactory::make(FinderFactory::make()->in(__DIR__), \array_replace(
-    PHP85::base(new DateTimeImmutable()),
-    PHP85::project(new DateTimeImmutable()),
-    PHP85::tomaschochola(new DateTimeImmutable()),
-));
+use Src\Bootstrap\Bootstrapper;
+
+final readonly class Main
+{
+    public function __invoke(): void
+    {
+        Bootstrapper::bootstrap()->app->run();
+    }
+}

@@ -54,13 +54,13 @@
   "repositories": [
     {
       "no-api": true,
-      "type": "vcs",
-      "url": "https://github.com/premierstacks/php-cs-fixer-stack.git"
+      "type": "git",
+      "url": "https://github.com/premierstacks/php-tooling-phpstan-config.git"
     },
     {
       "no-api": true,
-      "type": "vcs",
-      "url": "https://github.com/premierstacks/phpstan-stack.git"
+      "type": "git",
+      "url": "https://github.com/premierstacks/php-tooling-php-cs-fixer-config.git"
     }
   ],
   "require": {
@@ -80,13 +80,13 @@
     "ext-pcntl": "*",
     "ext-xdebug": "*",
     "phpunit/phpunit": "^12.5",
-    "premierstacks/php-cs-fixer-stack": "@dev",
-    "premierstacks/phpstan-stack": "@dev",
-    "roave/security-advisories": "@dev"
+    "roave/security-advisories": "dev-latest",
+    "tomaschochola/php-tooling-php-cs-fixer-config": "dev-main",
+    "tomaschochola/php-tooling-phpstan-config": "dev-main"
   },
   "support": {
     "docs": "https://github.com/tomaschochola/php-template-mezzio",
-    "email": "chocholatom1997@gmail.com",
+    "email": "tomaschochola@seznam.cz",
     "issues": "https://github.com/tomaschochola/php-template-mezzio/issues",
     "source": "https://github.com/tomaschochola/php-template-mezzio.git"
   },

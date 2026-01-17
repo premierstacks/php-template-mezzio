@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * @author Tomáš Chochola <tomaschochola@seznam.cz>
+ * @copyright © 2025 Tomáš Chochola <tomaschochola@seznam.cz>
+ *
+ * @license CC-BY-ND-4.0
+ *
+ * @see {@link https://creativecommons.org/licenses/by-nd/4.0/} License
+ * @see {@link https://github.com/tomaschochola} GitHub Profile
+ * @see {@link https://github.com/sponsors/tomaschochola} GitHub Sponsors
+ */
+
 declare(strict_types=1);
 
 namespace Src\Database;
@@ -7,7 +18,7 @@ namespace Src\Database;
 use PDO;
 use PDOStatement;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
+use UnexpectedValueException;
 
 use function assert;
 
@@ -105,7 +116,7 @@ final readonly class Migrator
         $stm->execute(['migrations', 30]);
 
         if ($stm->fetchColumn() !== 1) {
-            throw new RuntimeException();
+            throw new UnexpectedValueException('GET_LOCK');
         }
     }
 
@@ -116,5 +127,9 @@ final readonly class Migrator
         assert($stm instanceof PDOStatement);
 
         $stm->execute(['migrations']);
+
+        if ($stm->fetchColumn() !== 1) {
+            throw new UnexpectedValueException('RELEASE_LOCK');
+        }
     }
 }

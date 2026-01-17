@@ -1,7 +1,9 @@
 <?php
 
 /**
+ * @author Tomáš Chochola <tomaschochola@seznam.cz>
  * @copyright © 2025 Tomáš Chochola <tomaschochola@seznam.cz>
+ *
  * @license CC-BY-ND-4.0
  *
  * @see {@link https://creativecommons.org/licenses/by-nd/4.0/} License
@@ -20,8 +22,6 @@ use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
- *
- * @no-named-arguments
  */
 #[CoversNothing]
 #[Small]

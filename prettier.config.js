@@ -10,12 +10,12 @@
  * @see {@link https://github.com/sponsors/tomaschochola} GitHub Sponsors
  */
 
-import { PrettierStack } from '@premierstacks/prettier-stack';
+import { PrettierConfig } from '@tomaschochola/ts-tooling-prettier-config';
 
 // eslint-disable-next-line no-restricted-exports
-export default PrettierStack.create()
-  .base()
-  .pug()
-  .ruby()
-  .xml()
-  .build();
+export default PrettierConfig.compose(
+  PrettierConfig.base(),
+  PrettierConfig.pug(),
+  PrettierConfig.ruby(),
+  PrettierConfig.xml(),
+);
